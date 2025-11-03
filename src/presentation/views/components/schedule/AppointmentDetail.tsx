@@ -89,7 +89,7 @@ export const AppointmentDetail: React.FC<AppointmentDetailProps> = ({
 				setLoading(true);
 				setError(null);
 
-				await apiService.updateAppointment(appointment.id, {
+				await apiService.appointments.updateAppointment(appointment.id, {
 					...appointment,
 					status: newStatus,
 				});

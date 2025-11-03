@@ -9,37 +9,37 @@ import {
 
 export class AppointmentRepository implements IAppointmentRepository {
 	async getAll(): Promise<Appointment[]> {
-		const response = await apiService.getAppointments();
+		const response = await apiService.appointments.getAppointments();
 		return response.data.map((dto: AppointmentDTO) => mapAppointmentDTOToEntity(dto));
 	}
 
 	async getById(id: string): Promise<Appointment> {
-		const response = await apiService.getAppointmentById(id);
+		const response = await apiService.appointments.getAppointmentById(id);
 		return mapAppointmentDTOToEntity(response.data);
 	}
 
 	async create(appointment: Omit<Appointment, 'id'>): Promise<Appointment> {
 		const dto = mapEntityToAppointmentDTO(appointment as Appointment);
-		const response = await apiService.createAppointment(dto);
+		const response = await apiService.appointments.createAppointment(dto);
 		return mapAppointmentDTOToEntity(response.data);
 	}
 
 	async update(id: string, appointment: Partial<Appointment>): Promise<Appointment> {
-		const response = await apiService.updateAppointment(id, appointment);
+		const response = await apiService.appointments.updateAppointment(id, appointment);
 		return mapAppointmentDTOToEntity(response.data);
 	}
 
 	async delete(id: string): Promise<void> {
-		await apiService.deleteAppointment(id);
+		await apiService.appointments.deleteAppointment(id);
 	}
 
 	async getByPatient(patientId: string): Promise<Appointment[]> {
-		const response = await apiService.getAppointmentsByPatient(patientId);
+		const response = await apiService.appointments.getAppointmentsByPatient(patientId);
 		return response.data.map((dto: AppointmentDTO) => mapAppointmentDTOToEntity(dto));
 	}
 
 	async getByDoctor(doctorId: string): Promise<Appointment[]> {
-		const response = await apiService.getAppointmentsByDoctor(doctorId);
+		const response = await apiService.appointments.getAppointmentsByDoctor(doctorId);
 		return response.data.map((dto: AppointmentDTO) => mapAppointmentDTOToEntity(dto));
 	}
 
@@ -48,17 +48,17 @@ export class AppointmentRepository implements IAppointmentRepository {
 		fromDate: string,
 		toDate: string
 	): Promise<Appointment[]> {
-		const response = await apiService.getAppointmentsByDoctorAndDateRange(doctorId, fromDate, toDate);
+		const response = await apiService.appointments.getAppointmentsByDoctorAndDateRange(doctorId, fromDate, toDate);
 		return response.data.map((dto: AppointmentDTO) => mapAppointmentDTOToEntity(dto));
 	}
 
 	async confirm(id: string): Promise<Appointment> {
-		const response = await apiService.confirmAppointment(id);
+		const response = await apiService.appointments.confirmAppointment(id);
 		return mapAppointmentDTOToEntity(response.data);
 	}
 
 	async cancel(id: string, reason?: string): Promise<void> {
-		await apiService.cancelAppointment(id, reason);
+		await apiService.appointments.cancelAppointment(id, reason);
 	}
 }
 

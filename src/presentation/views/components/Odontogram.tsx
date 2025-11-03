@@ -175,7 +175,7 @@ export const Odontogram: React.FC<OdontogramProps> = ({
 			try {
 				if (currentLesion) {
 					// Remover lesión
-					const response = await apiService.removeLesion(odontogramId, toothId, face);
+					const response = await apiService.odontograms.removeLesion(odontogramId, toothId, face);
 					const updatedOdontogram = response.data;
 
 					// Actualizar estado local desde la respuesta del backend
@@ -200,7 +200,7 @@ export const Odontogram: React.FC<OdontogramProps> = ({
 					}
 				} else {
 					// Añadir lesión
-					const response = await apiService.addLesion(odontogramId, toothId, face, selectedLesion);
+					const response = await apiService.odontograms.addLesion(odontogramId, toothId, face, selectedLesion);
 					const updatedOdontogram = response.data;
 
 					// Actualizar estado local desde la respuesta del backend

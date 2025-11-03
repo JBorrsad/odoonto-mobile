@@ -45,8 +45,8 @@ export const AppointmentForm: React.FC<AppointmentFormProps> = ({
 			try {
 				setLoadingData(true);
 				const [patientsResponse, doctorsResponse] = await Promise.all([
-					apiService.getPatients(),
-					apiService.getDoctors(),
+					apiService.patients.getPatients(),
+					apiService.doctors.getDoctors(),
 				]);
 				setPatients(patientsResponse.data || []);
 				setDoctors(doctorsResponse.data || []);
