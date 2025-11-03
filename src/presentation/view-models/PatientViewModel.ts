@@ -7,130 +7,106 @@ import {
 	DeletePatientUseCase,
 	SearchPatientsUseCase,
 } from '../../domain/use-cases';
+import { BaseViewModel } from './BaseViewModel';
 
-export class PatientListViewModel {
-	// HOOK: useState - Estado para pacientes
+// ViewModel para la lista de pacientes - Maneja la carga y búsqueda de pacientes
+export class PatientListViewModel extends BaseViewModel {
 	patients: Patient[] = [];
-	loading = false;
-	error: string | null = null;
 
 	constructor(
 		private getPatientsUseCase: GetPatientsUseCase,
 		private searchPatientsUseCase: SearchPatientsUseCase
-	) {}
+	) {
+		super();
+	}
 
 	async loadPatients(): Promise<void> {
-		this.loading = true;
-		this.error = null;
-		try {
-			this.patients = await this.getPatientsUseCase.execute();
-		} catch (err) {
-			this.error = err instanceof Error ? err.message : 'Error al cargar pacientes';
-		} finally {
-			this.loading = false;
-		}
+		await this.executeWithLoading(
+			async () => {
+				this.patients = await this.getPatientsUseCase.execute();
+			},
+			'Error al cargar pacientes'
+		);
 	}
 
 	async searchPatients(query: string): Promise<void> {
-		this.loading = true;
-		this.error = null;
-		try {
-			this.patients = await this.searchPatientsUseCase.execute(query);
-		} catch (err) {
-			this.error = err instanceof Error ? err.message : 'Error al buscar pacientes';
-		} finally {
-			this.loading = false;
-		}
+		await this.executeWithLoading(
+			async () => {
+				this.patients = await this.searchPatientsUseCase.execute(query);
+			},
+			'Error al buscar pacientes'
+		);
 	}
 }
 
-export class PatientDetailViewModel {
-	// HOOK: useState - Estado para paciente
+// ViewModel para el detalle de un paciente - Maneja operaciones CRUD sobre un paciente específico
+export class PatientDetailViewModel extends BaseViewModel {
 	patient: Patient | null = null;
-	loading = false;
-	error: string | null = null;
 
 	constructor(
 		private getPatientByIdUseCase: GetPatientByIdUseCase,
 		private updatePatientUseCase: UpdatePatientUseCase,
 		private deletePatientUseCase: DeletePatientUseCase
-	) {}
+	) {
+		super();
+	}
 
 	async loadPatient(id: string): Promise<void> {
-		this.loading = true;
-		this.error = null;
-		try {
-			this.patient = await this.getPatientByIdUseCase.execute(id);
-		} catch (err) {
-			this.error = err instanceof Error ? err.message : 'Error al cargar paciente';
-		} finally {
-			this.loading = false;
-		}
+		await this.executeWithLoading(
+			async () => {
+				this.patient = await this.getPatientByIdUseCase.execute(id);
+			},
+			'Error al cargar paciente'
+		);
 	}
 
 	async updatePatient(id: string, patient: Partial<Patient>): Promise<Patient> {
-		this.loading = true;
-		this.error = null;
-		try {
-			const updated = await this.updatePatientUseCase.execute(id, patient);
-			this.patient = updated;
-			return updated;
-		} catch (err) {
-			this.error = err instanceof Error ? err.message : 'Error al actualizar paciente';
-			throw err;
-		} finally {
-			this.loading = false;
-		}
+		const updated = await this.executeWithErrorHandling(
+			async () => {
+				const result = await this.updatePatientUseCase.execute(id, patient);
+				this.patient = result;
+				return result;
+			},
+			'Error al actualizar paciente'
+		);
+		return updated;
 	}
 
 	async deletePatient(id: string): Promise<void> {
-		this.loading = true;
-		this.error = null;
-		try {
-			await this.deletePatientUseCase.execute(id);
-		} catch (err) {
-			this.error = err instanceof Error ? err.message : 'Error al eliminar paciente';
-			throw err;
-		} finally {
-			this.loading = false;
-		}
+		await this.executeWithErrorHandling(
+			async () => {
+				await this.deletePatientUseCase.execute(id);
+			},
+			'Error al eliminar paciente'
+		);
 	}
 }
 
-export class PatientFormViewModel {
-	// HOOK: useState - Estado para formulario
-	loading = false;
-	error: string | null = null;
-
+// ViewModel para formularios de paciente - Maneja la creación y actualización de pacientes
+export class PatientFormViewModel extends BaseViewModel {
 	constructor(
 		private createPatientUseCase: CreatePatientUseCase,
 		private updatePatientUseCase: UpdatePatientUseCase
-	) {}
+	) {
+		super();
+	}
 
 	async createPatient(patient: Omit<Patient, 'id'>): Promise<Patient> {
-		this.loading = true;
-		this.error = null;
-		try {
-			return await this.createPatientUseCase.execute(patient);
-		} catch (err) {
-			this.error = err instanceof Error ? err.message : 'Error al crear paciente';
-			throw err;
-		} finally {
-			this.loading = false;
-		}
+		return await this.executeWithErrorHandling(
+			async () => {
+				return await this.createPatientUseCase.execute(patient);
+			},
+			'Error al crear paciente'
+		);
 	}
 
 	async updatePatient(id: string, patient: Partial<Patient>): Promise<Patient> {
-		this.loading = true;
-		this.error = null;
-		try {
-			return await this.updatePatientUseCase.execute(id, patient);
-		} catch (err) {
-			this.error = err instanceof Error ? err.message : 'Error al actualizar paciente';
-			throw err;
-		} finally {
-			this.loading = false;
-		}
+		return await this.executeWithErrorHandling(
+			async () => {
+				return await this.updatePatientUseCase.execute(id, patient);
+			},
+			'Error al actualizar paciente'
+		);
 	}
 }
 
