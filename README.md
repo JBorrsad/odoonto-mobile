@@ -22,21 +22,17 @@ odoonto-mobile/
 │   ├── data/                    # Implementación de datos
 │   │   ├── repositories/        # Repositorios concretos
 │   │   ├── services/            # Servicios API
-│   │   ├── data-sources/        # Fuentes de datos
 │   │   └── models/              # DTOs y modelos de datos
 │   ├── presentation/            # Capa de presentación
 │   │   ├── view-models/         # ViewModels y Presenters
 │   │   ├── views/
-│   │   │   ├── screens/         # Pantallas
 │   │   │   ├── components/      # Componentes reutilizables
-│   │   │   └── layout/          # Layouts compartidos
+│   │   │   └── pages/           # Páginas específicas
 │   │   └── hooks/               # Hooks personalizados
 │   └── core/                    # Infraestructura compartida
-│       ├── navigation/          # Configuración de navegación
 │       ├── theme/               # Tema de la aplicación
 │       ├── utils/               # Utilidades
-│       ├── constants/           # Constantes
-│       └── types/                # Tipos TypeScript compartidos
+│       └── constants/           # Constantes
 └── app/                         # Expo Router (file-based routing)
 ```
 
@@ -52,8 +48,8 @@ Hook para gestionar pacientes. Maneja el estado de carga, errores y las operacio
 
 ```typescript
 const { patients, loading, error, loadPatients, createPatient } = usePatient(
-  getPatientsUseCase,
-  searchPatientsUseCase
+	getPatientsUseCase,
+	searchPatientsUseCase
 );
 ```
 
